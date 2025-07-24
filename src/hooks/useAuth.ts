@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { User } from '../types';
-import { signIn, signOut, signUp, getCurrentUser } from '../../authService';
-import { supabase } from '../../supabaseClient'; // vérifie ce chemin
+import { signIn, signOut, signUp, getFullUser } from '../../authService';
 
 interface AuthState {
   user: User | null;
@@ -11,46 +10,24 @@ interface AuthState {
   register: (userData: Omit<User, 'id' | 'createdAt'>) => Promise<boolean>;
 }
 
-// Fonction pour récupérer les détails du user depuis la table "users"
-const fetchUserDetails = async (email: string): Promise<User | null> => {
-  const { data, error } = await supabase
-    .from('users') // nom de ta table
-    .select('*')
-    .eq('email', email)
-    .single();
-
-  if (error || !data) return null;
-  return data as User;
-};
-
 export const useAuth = (): AuthState => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    getCurrentUser().then(async ({ data }) => {
-      const supabaseUser = data?.user;
-      if (supabaseUser) {
-        const fullUser = await fetchUserDetails(supabaseUser.email);
-        setUser(fullUser);
-        setIsAuthenticated(!!fullUser);
-      }
+    getFullUser().then((fullUser) => {
+      setUser(fullUser);
+      setIsAuthenticated(!!fullUser);
     });
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const loggedUser = await signIn(email, password);
-      if (!loggedUser) return false;
-
-      const fullUser = await fetchUserDetails(email);
-      if (fullUser) {
-        setUser(fullUser);
-        setIsAuthenticated(true);
-        return true;
-      }
-
-      return false;
+      await signIn(email, password);
+      const fullUser = await getFullUser();
+      setUser(fullUser);
+      setIsAuthenticated(!!fullUser);
+      return true;
     } catch {
       setUser(null);
       setIsAuthenticated(false);
@@ -66,24 +43,11 @@ export const useAuth = (): AuthState => {
 
   const register = async (userData: Omit<User, 'id' | 'createdAt'>): Promise<boolean> => {
     try {
-      const newUser = await signUp(userData.email, userData.password);
-
-      if (newUser) {
-        // Tu peux aussi ici ajouter les infos personnalisées dans ta table `users`
-        await supabase.from('users').insert([
-          {
-            ...userData,
-            createdAt: new Date(),
-          }
-        ]);
-
-        const fullUser = await fetchUserDetails(userData.email);
-        setUser(fullUser);
-        setIsAuthenticated(true);
-        return true;
-      }
-
-      return false;
+      await signUp(userData.email, userData.password);
+      const fullUser = await getFullUser();
+      setUser(fullUser);
+      setIsAuthenticated(!!fullUser);
+      return true;
     } catch {
       return false;
     }
