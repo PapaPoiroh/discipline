@@ -1,5 +1,5 @@
 import { supabase } from './supabaseClient';
-import { User } from '../types';
+import { User } from './types';
 
 export async function getFullUser(): Promise<User | null> {
   const { data: authData } = await supabase.auth.getUser();
