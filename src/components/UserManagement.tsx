@@ -307,10 +307,10 @@ ${currentUser.firstName} ${currentUser.lastName}`;
               </div>
               <p className="text-gray-600 text-sm">{user.email}</p>
               <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
-                {user.permissions.canView && <span>👁️ Consultation</span>}
-                {user.permissions.canCreate && <span>✏️ Création</span>}
-                {user.permissions.canSanction && <span>⚖️ Sanctions</span>}
-                {user.permissions.canAccessSettings && <span>⚙️ Paramètres</span>}
+              {user.permissions.canView && <span>👁️ Consultation</span>}
+              {user.permissions.canCreate && <span>✏️ Création</span>}
+              {user.permissions.canSanction && <span>⚖️ Sanctions</span>}
+              {user.permissions.canAccessSettings && <span>⚙️ Paramètres</span>}
               </div>
             </div>
             
