@@ -1,79 +1,64 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '../supabaseClient';
-import { User } from '../types';
+// src/hooks/useAuth.ts
+import { useState, useEffect } from 'react';
+import { User } from './types';
+import { supabase } from './supabaseClient';
 
-interface AuthContextType {
+interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
-  loading: boolean;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
+  register: (email: string, password: string) => Promise<boolean>;
 }
 
-const AuthContext = createContext<AuthContextType>({
-  user: null,
-  isAuthenticated: false,
-  loading: true,
-  logout: async () => {},
-});
-
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const useAuth = (): AuthState => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  const fetchUser = async () => {
-    const { data: authUser } = await supabase.auth.getUser();
-    if (!authUser?.user) {
-      setUser(null);
-      setIsAuthenticated(false);
-      return;
-    }
-
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', authUser.user.id)
-      .single();
-
-    if (error || !data) {
-      setUser(null);
-      setIsAuthenticated(false);
-    } else {
-      setUser(data);
-      setIsAuthenticated(true);
-    }
-  };
-
-  fetchUser();
-}, []);
-
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        setUser(null);
-        setIsAuthenticated(false);
-      } else {
-        fetchUser();
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUser(session.user as unknown as User);
+        setIsAuthenticated(true);
       }
     });
-
-    return () => {
-      listener?.subscription.unsubscribe();
-    };
+    const { subscription } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setUser(session.user as unknown as User);
+        setIsAuthenticated(true);
+      } else {
+        setUser(null);
+        setIsAuthenticated(false);
+      }
+    });
+    return () => subscription.unsubscribe();
   }, []);
 
-  const logout = async () => {
+  const login = async (email: string, password: string): Promise<boolean> => {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error || !data.user) {
+      setUser(null);
+      setIsAuthenticated(false);
+      return false;
+    }
+    setUser(data.user as unknown as User);
+    setIsAuthenticated(true);
+    return true;
+  };
+
+  const logout = async (): Promise<void> => {
     await supabase.auth.signOut();
     setUser(null);
     setIsAuthenticated(false);
   };
 
-  return (
-    <AuthContext.Provider value={{ user, isAuthenticated, loading, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  const register = async (email: string, password: string): Promise<boolean> => {
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error || !data.user) return false;
+    setUser(data.user as unknown as User);
+    setIsAuthenticated(true);
+    return true;
+  };
+
+  return { user, isAuthenticated, login, logout, register };
 };
-
-export const useAuth = () => useContext(AuthContext);
-
