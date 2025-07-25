@@ -12,8 +12,8 @@ interface StudentFormProps {
 
 const StudentForm: React.FC<StudentFormProps> = ({ student, onSave, onBulkImport, onCancel }) => {
   const [formData, setFormData] = useState({
-    firstName: student?.firstName || '',
-    lastName: student?.lastName || '',
+    first_name: student?.first_name || '',
+    last_name: student?.last_name || '',
     email: student?.email || '',
     class: student?.class || '',
     level: student?.level || '',
@@ -49,14 +49,14 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSave, onBulkImport
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
         const students: Omit<Student, 'id'>[] = jsonData.map((row: any) => ({
-          firstName: row['Prénom'] || row['prenom'] || row['firstName'] || '',
-          lastName: row['Nom'] || row['nom'] || row['lastName'] || '',
+          first_name: row['Prénom'] || row['prenom'] || row['first_name'] || '',
+          last_name: row['Nom'] || row['nom'] || row['last_name'] || '',
           class: row['Classe'] || row['classe'] || row['class'] || '',
           level: row['Niveau'] || row['niveau'] || row['level'] || '',
           email: row['Email'] || row['email'] || '',
           birthDate: row['Date de naissance'] || row['birthDate'] || '',
           parentContact: row['Contact parent'] || row['parentContact'] || ''
-        })).filter(student => student.firstName && student.lastName);
+        })).filter(student => student.first_name && student.last_name);
 
         onBulkImport(students);
         setShowImport(false);
@@ -119,8 +119,8 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSave, onBulkImport
               </label>
               <input
                 type="text"
-                name="firstName"
-                value={formData.firstName}
+                name="first_name"
+                value={formData.first_name}
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
@@ -132,8 +132,8 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSave, onBulkImport
               </label>
               <input
                 type="text"
-                name="lastName"
-                value={formData.lastName}
+                name="last_name"
+                value={formData.last_name}
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required

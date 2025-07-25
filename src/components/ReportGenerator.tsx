@@ -21,13 +21,13 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ incidents, students, 
   const getStudentNames = (studentIds: string[]) => {
     return studentIds.map(id => {
       const student = students.find(s => s.id === id);
-      return student ? `${student.firstName} ${student.lastName}` : 'Inconnu';
+      return student ? `${student.first_name} ${student.last_name}` : 'Inconnu';
     }).join(', ');
   };
 
   const getCreatorName = (createdBy: string) => {
     const creator = users.find(u => u.id === createdBy);
-    return creator ? `${creator.firstName} ${creator.lastName}` : 'Inconnu';
+    return creator ? `${creator.first_name} ${creator.last_name}` : 'Inconnu';
   };
 
   const getStudentInfo = (studentIds: string[]) => {
@@ -51,7 +51,7 @@ const ReportGenerator: React.FC<ReportGeneratorProps> = ({ incidents, students, 
     }).join('\n');
 
     const studentsText = studentsInfo.map(student => 
-      `Nom et prénom : ${student?.firstName} ${student?.lastName}
+      `Nom et prénom : ${student?.first_name} ${student?.last_name}
 Classe : ${student?.class}
 ${student?.level ? `Niveau : ${student.level}` : ''}
 ${student?.email ? `Email : ${student.email}` : ''}

@@ -61,14 +61,14 @@ const SchoolSettings: React.FC<SchoolSettingsProps> = ({ settings, onSave, stude
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
         const studentsData: Omit<Student, 'id'>[] = jsonData.map((row: any) => ({
-          firstName: row['Prénom'] || row['prenom'] || row['firstName'] || '',
-          lastName: row['Nom'] || row['nom'] || row['lastName'] || '',
+          first_name: row['Prénom'] || row['prenom'] || row['first_name'] || '',
+          last_name: row['Nom'] || row['nom'] || row['last_name'] || '',
           class: row['Classe'] || row['classe'] || row['class'] || '',
           level: row['Niveau'] || row['niveau'] || row['level'] || '',
           email: row['Email'] || row['email'] || '',
           birthDate: row['Date de naissance'] || row['birthDate'] || '',
           parentContact: row['Contact parent'] || row['parentContact'] || ''
-        })).filter(student => student.firstName && student.lastName);
+        })).filter(student => student.first_name && student.last_name);
 
         if (studentsData.length > 0) {
           onBulkImportStudents(studentsData);

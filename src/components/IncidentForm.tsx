@@ -244,7 +244,7 @@ const IncidentForm: React.FC<IncidentFormProps> = ({ incident, students, current
                         className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                       />
                       <span className="text-sm text-gray-900">
-                        {student.firstName} {student.lastName} - {student.class}
+                        {student.first_name} {student.last_name} - {student.class}
                       </span>
                     </label>
                   ))

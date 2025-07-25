@@ -20,8 +20,8 @@ const UserManagement: React.FC<UserManagementProps> = ({
   const [showForm, setShowForm] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     email: '',
     role: 'educator' as User['role'],
     customRole: '',
@@ -68,8 +68,8 @@ const UserManagement: React.FC<UserManagementProps> = ({
 
   const resetForm = () => {
     setFormData({
-      firstName: '',
-      lastName: '',
+      first_name: '',
+      last_name: '',
       email: '',
       role: 'educator',
       customRole: '',
@@ -86,8 +86,8 @@ const UserManagement: React.FC<UserManagementProps> = ({
 
   const handleEdit = (user: User) => {
     setFormData({
-      firstName: user.first_Name,
-      lastName: user.last_Name,
+      first_name: user.first_Name,
+      last_name: user.last_Name,
       email: user.email,
       role: user.role,
       customRole: user.customRole || '',
@@ -158,8 +158,8 @@ ${currentuser.first_Name} ${currentuser.last_Name}`;
                 </label>
                 <input
                   type="text"
-                  value={formData.firstName}
-                  onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
+                  value={formData.first_name}
+                  onChange={(e) => setFormData(prev => ({ ...prev, first_name: e.target.value }))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 />
@@ -170,8 +170,8 @@ ${currentuser.first_Name} ${currentuser.last_Name}`;
                 </label>
                 <input
                   type="text"
-                  value={formData.lastName}
-                  onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
+                  value={formData.last_name}
+                  onChange={(e) => setFormData(prev => ({ ...prev, last_name: e.target.value }))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 />
