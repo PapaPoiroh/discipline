@@ -70,7 +70,7 @@ const Dashboard: React.FC<DashboardProps> = ({ incidents, students, users, curre
       {/* En-tête de bienvenue */}
       <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-6 text-white">
         <h1 className="text-2xl font-bold mb-2">
-          Bonjour {currentUser.firstName} {currentUser.lastName}
+          Bonjour {currentuser.first_Name} {currentuser.last_Name}
         </h1>
         <p className="text-blue-100">
           Tableau de bord - Gestion disciplinaire
