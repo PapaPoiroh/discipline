@@ -1,63 +1,84 @@
-import { useState, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { supabase } from '../supabaseClient';
 import { User } from '../types';
-import { signIn, signOut, signUp, getFullUser } from '../../authService';
 
-interface AuthState {
+interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  loading: boolean;
   logout: () => Promise<void>;
-  register: (userData: Omit<User, 'id' | 'createdAt'>) => Promise<boolean>;
 }
 
-export const useAuth = (): AuthState => {
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  isAuthenticated: false,
+  loading: true,
+  logout: async () => {},
+});
+
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getFullUser().then((fullUser) => {
-      setUser(fullUser);
-      setIsAuthenticated(!!fullUser);
+    const fetchUser = async () => {
+      setLoading(true);
+      const { data: authData, error: authError } = await supabase.auth.getUser();
+
+      if (authError || !authData?.user) {
+        setUser(null);
+        setIsAuthenticated(false);
+        setLoading(false);
+        return;
+      }
+
+      const { data: profile, error: profileError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', authData.user.id)
+        .single();
+
+      if (profileError || !profile) {
+        console.error('Erreur chargement du profil utilisateur:', profileError);
+        setUser(null);
+        setIsAuthenticated(false);
+      } else {
+        setUser(profile as User);
+        setIsAuthenticated(true);
+      }
+
+      setLoading(false);
+    };
+
+    fetchUser();
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        setUser(null);
+        setIsAuthenticated(false);
+      } else {
+        fetchUser();
+      }
     });
+
+    return () => {
+      listener?.subscription.unsubscribe();
+    };
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
-    try {
-      await signIn(email, password);
-      const fullUser = await getFullUser();
-      setUser(fullUser);
-      setIsAuthenticated(!!fullUser);
-      return true;
-    } catch {
-      setUser(null);
-      setIsAuthenticated(false);
-      return false;
-    }
-  };
-
   const logout = async () => {
-    await signOut();
+    await supabase.auth.signOut();
     setUser(null);
     setIsAuthenticated(false);
   };
 
-  const register = async (userData: Omit<User, 'id' | 'createdAt'>): Promise<boolean> => {
-    try {
-      await signUp(userData.email, userData.password);
-      const fullUser = await getFullUser();
-      setUser(fullUser);
-      setIsAuthenticated(!!fullUser);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  return {
-    user,
-    isAuthenticated,
-    login,
-    logout,
-    register,
-  };
+  return (
+    <AuthContext.Provider value={{ user, isAuthenticated, loading, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
+
+export const useAuth = () => useContext(AuthContext);
+
