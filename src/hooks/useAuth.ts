@@ -22,36 +22,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      setLoading(true);
-      const { data: authData, error: authError } = await supabase.auth.getUser();
+  const fetchUser = async () => {
+    const { data: authUser } = await supabase.auth.getUser();
+    if (!authUser?.user) {
+      setUser(null);
+      setIsAuthenticated(false);
+      return;
+    }
 
-      if (authError || !authData?.user) {
-        setUser(null);
-        setIsAuthenticated(false);
-        setLoading(false);
-        return;
-      }
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', authUser.user.id)
+      .single();
 
-      const { data: profile, error: profileError } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', authData.user.id)
-        .single();
+    if (error || !data) {
+      setUser(null);
+      setIsAuthenticated(false);
+    } else {
+      setUser(data);
+      setIsAuthenticated(true);
+    }
+  };
 
-      if (profileError || !profile) {
-        console.error('Erreur chargement du profil utilisateur:', profileError);
-        setUser(null);
-        setIsAuthenticated(false);
-      } else {
-        setUser(profile as User);
-        setIsAuthenticated(true);
-      }
-
-      setLoading(false);
-    };
-
-    fetchUser();
+  fetchUser();
+}, []);
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!session) {
