@@ -1,9 +1,10 @@
+// src/hooks/useAuth.ts
 import { createContext, useContext } from 'react';
-import { User } from '@/types'; // Assure-toi que l'interface User est bien importée
+import { User } from '@/types'; // Vérifie que ce chemin correspond à ton projet
 
-// 🔐 Utilisateur "mocké" — ADMIN
+// ✅ Utilisateur mocké (admin)
 const mockUser: User = {
-  id: '1',
+  id: '00000000-0000-0000-0000-000000000001',
   first_Name: 'Admin',
   last_Name: 'Test',
   email: 'admin@test.com',
@@ -20,12 +21,16 @@ const mockUser: User = {
   lastLogin: new Date()
 };
 
-// Simule le contexte d'authentification
-const AuthContext = createContext({
-  currentUser: mockUser, // ✅ valeur par défaut = user en dur
+const AuthContext = createContext<{
+  currentUser: User | null;
+  signIn: () => Promise<void>;
+  signUp: () => Promise<void>;
+  signOut: () => Promise<void>;
+}>({
+  currentUser: mockUser,
   signIn: async () => {},
-  signOut: async () => {},
-  signUp: async () => {}
+  signUp: async () => {},
+  signOut: async () => {}
 });
 
 export const useAuth = () => useContext(AuthContext);
