@@ -61,7 +61,7 @@ const Header: React.FC<HeaderProps> = ({ currentView, onViewChange, schoolLogo, 
             
             <div className="flex items-center space-x-3 text-white">
               <div className="text-right">
-                <p className="text-sm font-medium">{currentuser.first_Name} {currentuser.last_Name}</p>
+                <p className="text-sm font-medium">{currentuser.first_name} {currentuser.last_name}</p>
                 <p className="text-xs opacity-80">{
                   currentUser.role === 'admin' ? 'Administrateur' :
                   currentUser.role === 'principal' ? 'Chef d\'établissement' :

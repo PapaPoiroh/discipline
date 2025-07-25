@@ -22,7 +22,7 @@ function App() {
   const [students, setStudents] = useState<Student[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [schoolSettings, setSchoolSettings] = useState<SchoolSettingsType>({
-    schoolName: 'Mon Établissement',
+    schoolName: 'La Salle Saint Jean',
     principalName: 'M. ESCOURROU',
     principalTitle: 'Adjoint de direction',
     address: ''

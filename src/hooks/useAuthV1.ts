@@ -8,7 +8,7 @@ interface AuthState {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
-  register: (userData: Omit<User, 'id' | 'createdAt'>) => Promise<boolean>;
+  register: (userData: Omit<User, 'id' | 'created_at'>) => Promise<boolean>;
 }
 
 export const useAuth = (): AuthState => {
@@ -41,7 +41,7 @@ export const useAuth = (): AuthState => {
     setIsAuthenticated(false);
   };
 
-  const register = async (userData: Omit<User, 'id' | 'createdAt'>): Promise<boolean> => {
+  const register = async (userData: Omit<User, 'id' | 'created_at'>): Promise<boolean> => {
     try {
       const newUser = await signUp(userData.email, userData.password);
       setUser(newUser);

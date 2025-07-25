@@ -5,7 +5,7 @@ import { User } from '../types';
 interface UserManagementProps {
   users: User[];
   currentUser: User;
-  onUserCreate: (userData: Omit<User, 'id' | 'createdAt'>) => void;
+  onUserCreate: (userData: Omit<User, 'id' | 'created_at'>) => void;
   onUserUpdate: (userId: string, userData: Partial<User>) => void;
   onUserDelete: (userId: string) => void;
 }
@@ -86,8 +86,8 @@ const UserManagement: React.FC<UserManagementProps> = ({
 
   const handleEdit = (user: User) => {
     setFormData({
-      first_name: user.first_Name,
-      last_name: user.last_Name,
+      first_name: user.first_name,
+      last_name: user.last_name,
       email: user.email,
       role: user.role,
       customRole: user.customRole || '',
@@ -114,7 +114,7 @@ const UserManagement: React.FC<UserManagementProps> = ({
 
   const sendInvitation = (user: User) => {
     const subject = 'Invitation - Application de gestion disciplinaire';
-    const body = `Bonjour ${user.first_Name} ${user.last_Name},
+    const body = `Bonjour ${user.first_name} ${user.last_name},
 
 Vous avez été invité(e) à rejoindre l'application de gestion disciplinaire de notre établissement.
 
@@ -122,7 +122,7 @@ Votre fonction : ${user.customRole || functionLabels[user.role]}
 Email de connexion : ${user.email}
 
 Cordialement,
-${currentuser.first_Name} ${currentuser.last_Name}`;
+${currentuser.first_name} ${currentuser.last_name}`;
 
     const mailtoLink = `mailto:${user.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     window.open(mailtoLink);
@@ -294,7 +294,7 @@ ${currentuser.first_Name} ${currentuser.last_Name}`;
             <div className="flex-1">
               <div className="flex items-center space-x-3 mb-2">
                 <h3 className="font-semibold text-gray-900">
-                  {user.first_Name} {user.last_Name}
+                  {user.first_name} {user.last_name}
                 </h3>
                 <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
                   {user.customRole || functionLabels[user.role]}

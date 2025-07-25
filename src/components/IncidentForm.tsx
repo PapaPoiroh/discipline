@@ -9,7 +9,7 @@ interface IncidentFormProps {
   incident?: Incident;
   students: Student[];
   currentUser: User;
-  onSave: (incident: Omit<Incident, 'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'lastModifiedBy'>) => void;
+  onSave: (incident: Omit<Incident, 'id' | 'created_at' | 'updatedAt' | 'createdBy' | 'lastModifiedBy'>) => void;
   onCancel: () => void;
 }
 

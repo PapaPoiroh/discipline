@@ -43,7 +43,7 @@ export interface Incident {
   handwrittenNotes?: string;
   attachments: Attachment[];
   sanctions: Sanction[];
-  createdAt: Date;
+  created_at: Date;
   updatedAt: Date;
   createdBy: string; // ID de l'utilisateur créateur
   lastModifiedBy: string;
@@ -83,7 +83,7 @@ export interface SavedReport {
   title: string;
   type: 'single' | 'summary';
   content: string;
-  createdAt: Date;
+  created_at: Date;
   createdBy: string;
   incidentIds?: string[];
 }

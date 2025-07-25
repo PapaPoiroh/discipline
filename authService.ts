@@ -52,15 +52,15 @@ export async function signIn(email: string, password: string): Promise<User> {
 interface SignUpData {
   email: string;
   password: string;
-  first_Name: string;
-  last_Name: string;
+  first_name: string;
+  last_name: string;
   role: User['role'];
   customRole?: string;
   permissions: User['permissions'];
 }
 
 export async function signUp(data: SignUpData) {
-  const { email, password, first_Name, last_Name, role, customRole, permissions } = data;
+  const { email, password, first_name, last_name, role, customRole, permissions } = data;
 
   // 1. Créer l'utilisateur dans Supabase Auth
   const { data: authUser, error: signUpError } = await supabase.auth.signUp({
@@ -79,12 +79,12 @@ export async function signUp(data: SignUpData) {
     {
       id: userId,
       email,
-      first_Name,
-      last_Name,
+      first_name,
+      last_name,
       role,
       customRole,
       permissions,
-      createdAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
     },
   ]);
 
