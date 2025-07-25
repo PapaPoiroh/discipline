@@ -11,21 +11,23 @@ export interface Student {
 
 export interface User {
   id: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
-  role: 'admin' | 'educator' | 'teacher' | 'principal' | 'other';
-  customRole?: string;
+  role: 'admin'|'educator'|'teacher'|'principal'|'other';
+  custom_role?: string;
   permissions: {
     canView: boolean;
     canCreate: boolean;
     canSanction: boolean;
     canAccessSettings: boolean;
+    admin?: boolean;
     [key: string]: boolean;
   };
-  createdAt: string;      // ISO date string
-  lastLogin?: string;
+  created_at: string;
+  last_login?: string;
 }
+
 
 export interface Incident {
   id: string;
