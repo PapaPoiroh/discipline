@@ -4,7 +4,7 @@ import { User } from '@/types'; // Vérifie que ce chemin correspond à ton proj
 
 // ✅ Utilisateur mocké (admin)
 const mockUser: User = {
-  id: '00000000-0000-0000-0000-000000000001',
+  id: '8f4c7730-7859-4b6d-9667-0a44b025606d',
   first_Name: 'Admin',
   last_Name: 'Test',
   email: 'admin@test.com',
