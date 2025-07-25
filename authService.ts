@@ -1,5 +1,5 @@
 import { supabase } from './supabaseClient';
-import { User } from './types';
+import { User } from '../types';
 
 export async function getFullUser(): Promise<User | null> {
   const { data: authData } = await supabase.auth.getUser();
@@ -20,10 +20,12 @@ export async function getFullUser(): Promise<User | null> {
   return data as User;
 }
 
-export async function signIn(email: string, password: string): Promise<User> {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error || !data.user) throw error;
-  return data.user as User;
+export async function getUsers(): Promise<User[]> {
+  const { data, error } = await supabase
+    .from('users')
+    .select('*');
+  if (error) throw error;
+  return data as User[];
 }
 
 export async function signUp(email: string, password: string): Promise<User> {
