@@ -11,8 +11,8 @@ export interface Student {
 
 export interface User {
   id: string;
-  first_Name: string;
-  last_Name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   role: 'admin' | 'educator' | 'teacher' | 'principal' | 'other';
   customRole?: string;
@@ -21,11 +21,10 @@ export interface User {
     canCreate: boolean;
     canSanction: boolean;
     canAccessSettings: boolean;
-    admin: boolean;
     [key: string]: boolean;
   };
-  createdAt: Date;
-  lastLogin?: Date;
+  createdAt: string;      // ISO date string
+  lastLogin?: string;
 }
 
 export interface Incident {
